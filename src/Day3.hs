@@ -1,4 +1,4 @@
-module Day3 (d3p1) where
+module Day3 (d3p1, d3p2) where
 
 import Data.Char (isDigit)
 
@@ -23,3 +23,15 @@ sol [] = []
 
 d3p1 :: [Char] -> Int
 d3p1 = sum . map (uncurry (*)) . sol
+
+sol2 :: [Char] -> Bool -> [(Int, Int)]
+sol2 ('d' : 'o' : 'n' : '\'' : 't' : '(' : ')' : xs) _ = sol2 xs False
+sol2 ('d' : 'o' : '(' : ')' : xs) _ = sol2 xs True
+sol2 ('m' : 'u' : 'l' : '(' : xs) enabled
+  | checkParenthContent xs && enabled = parseParenthContent xs : sol2 xs enabled
+  | otherwise = sol2 xs enabled
+sol2 (_ : xs) enabled = sol2 xs enabled
+sol2 [] _ = []
+
+d3p2 :: [Char] -> Int
+d3p2 = sum . map (uncurry (*)) . flip sol2 True
