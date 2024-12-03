@@ -30,4 +30,5 @@ getSolutionAlgo arg =
         ("1", "2") -> d1p2
         ("2", "1") -> d2p1
         ("2", "2") -> d2p2
+        ("3", "1") -> d3p1
         _ -> error (arg ++ " " ++ d ++ " " ++ p ++ " is not implemented yet")
