@@ -1,7 +1,9 @@
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
-module Day5(d5p1) where
+
+module Day5 (d5p1, d5p2) where
 
 import qualified Data.IntMap as Map
+import Data.List (sortBy)
 import Data.List.Split (splitOn)
 import Prelude hiding (lookup)
 
@@ -34,6 +36,29 @@ d5p1 inp =
       lists = parseLists (dropWhile (elem '|') input)
    in sum (map middle (filter (`checkList` m) lists))
 
+customSort :: (Foldable t) => Map.IntMap (t Int) -> Int -> Int -> Ordering
+customSort m a b =
+  case Map.lookup a m of
+    Just l ->
+      if b `elem` l
+        then LT
+        else
+          ( case Map.lookup b m of
+              Just l' -> if a `elem` l' then GT else EQ
+              Nothing -> EQ
+          )
+    Nothing ->
+      ( case Map.lookup b m of
+          Just l -> if a `elem` l then GT else EQ
+          Nothing -> EQ
+      )
+
+d5p2 :: String -> Int
+d5p2 inp =
+  let input = filter (not . null) (lines inp)
+      m = parseOrdering (takeWhile (elem '|') input)
+      lists = parseLists (dropWhile (elem '|') input)
+   in sum (map (middle . sortBy (customSort m)) (filter (not . (`checkList` m)) lists))
 
 example :: String
 example = "47|53\n97|13\n97|61\n97|47\n75|29\n61|13\n75|53\n29|13\n97|29\n53|29\n61|53\n97|53\n61|29\n47|13\n75|47\n97|75\n47|61\n75|61\n47|29\n75|13\n53|13\n\n75,47,61,53,29\n97,61,53,29,13\n75,29,13\n75,97,47,61,53\n61,13,29\n97,13,75,29,47\n"
