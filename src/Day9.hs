@@ -2,16 +2,29 @@ module Day9 (d9p1, d9p2) where
 
 import Data.Maybe (fromJust, isJust)
 
+readDigit :: Char -> Int
+readDigit '0' = 0
+readDigit '1' = 1
+readDigit '2' = 2
+readDigit '3' = 3
+readDigit '4' = 4
+readDigit '5' = 5
+readDigit '6' = 6
+readDigit '7' = 7
+readDigit '8' = 8
+readDigit '9' = 9
+readDigit _ = error "not a digit"
+
 parseInput :: String -> ([Maybe Int], Int)
 parseInput s = (toMaybe 0 s, numBlocks s)
 
-numBlocks :: (Num a, Read a) => [Char] -> a
-numBlocks b = sum (map (\x -> read [x]) (takeEverySecond b))
+numBlocks :: [Char] -> Int
+numBlocks b = sum (map readDigit (takeEverySecond b))
 
 -- hope this is not to slow
 toMaybe :: (Num t) => t -> String -> [Maybe t]
-toMaybe i (x : y : xs) = replicate (read [x]) (Just i) ++ replicate (read [y]) Nothing ++ toMaybe (i + 1) xs
-toMaybe i [x] = replicate (read [x]) (Just i)
+toMaybe i (x : y : xs) = replicate (readDigit x) (Just i) ++ replicate (readDigit y) Nothing ++ toMaybe (i + 1) xs
+toMaybe i [x] = replicate (readDigit x) (Just i)
 toMaybe _ _ = []
 
 takeEverySecond :: [a] -> [a]
@@ -44,8 +57,8 @@ isBlock (Block _ _) = True
 isBlock (Free _) = False
 
 toExtents :: String -> Int -> [Extent]
-toExtents (x : y : xs) i = Block i (read [x]) : Free (read [y]) : toExtents xs (i + 1)
-toExtents [x] i = [Block i (read [x])]
+toExtents (x : y : xs) i = Block i (readDigit x) : Free (readDigit y) : toExtents xs (i + 1)
+toExtents [x] i = [Block i (readDigit x)]
 toExtents [] _ = []
 
 insertIntoFree :: [Extent] -> Extent -> [Extent]
