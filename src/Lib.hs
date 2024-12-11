@@ -19,6 +19,8 @@ module Lib
     d9p2,
     d10p1,
     d10p2,
+    d11p1,
+    d11p2,
   )
 where
 
@@ -32,3 +34,4 @@ import Day7 (d7p1, d7p2)
 import Day8 (d8p1, d8p2)
 import Day9 (d9p1, d9p2)
 import Day10 (d10p1, d10p2)
+import Day11 (d11p1, d11p2)
